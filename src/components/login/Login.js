@@ -6,6 +6,8 @@ import User from '../shared/models/User';
 import { withRouter } from 'react-router-dom';
 import { Button } from '../../views/design/Button';
 
+//todo: User component
+
 const FormContainer = styled.div`
   margin-top: 2em;
   display: flex;
@@ -57,26 +59,34 @@ const ButtonContainer = styled.div`
 `;
 
 /**
- * Classes in React allow you to have an internal state within the class and to have the React life-cycle for your component.
+ * Classes in React allow you to have an internal state within the class
+ * and to have the React life-cycle for your component.
  * You should have a class (instead of a functional component) when:
- * - You need an internal state that cannot be achieved via props from other parent components
+ * - You need an internal state that cannot be achieved via props
+ *   from other parent components
  * - You fetch data from the server (e.g., in componentDidMount())
  * - You want to access the DOM via Refs
  * https://reactjs.org/docs/react-component.html
  * @Class
  */
+
+// todo:
+// * change the login functionality
 class Login extends React.Component {
   /**
-   * If you don’t initialize the state and you don’t bind methods, you don’t need to implement a constructor for your React component.
+   * If you don’t initialize the state and you don’t bind methods,
+   * you don’t need to implement a constructor for your React component.
    * The constructor for a React component is called before it is mounted (rendered).
-   * In this case the initial state is defined in the constructor. The state is a JS object containing two fields: name and username
+   * In this case the initial state is defined in the constructor.
+   * The state is a JS object containing two fields: name and username
    * These fields are then handled in the onChange() methods in the resp. InputFields
    */
   constructor() {
     super();
     this.state = {
       name: null,
-      username: null
+      username: null,
+      password: null
     };
   }
   /**
@@ -88,7 +98,8 @@ class Login extends React.Component {
     try {
       const requestBody = JSON.stringify({
         username: this.state.username,
-        name: this.state.name
+        name: this.state.name,
+        password: this.state.password
       });
       const response = await api.post('/users', requestBody);
 
@@ -117,11 +128,14 @@ class Login extends React.Component {
   }
 
   /**
-   * componentDidMount() is invoked immediately after a component is mounted (inserted into the tree).
+   * componentDidMount() is invoked immediately after a component
+   * is mounted (inserted into the tree).
    * Initialization that requires DOM nodes should go here.
-   * If you need to load data from a remote endpoint, this is a good place to instantiate the network request.
+   * If you need to load data from a remote endpoint,
+   * this is a good place to instantiate the network request.
    * You may call setState() immediately in componentDidMount().
-   * It will trigger an extra rendering, but it will happen before the browser updates the screen.
+   * It will trigger an extra rendering, but it will happen before
+   * the browser updates the screen.
    */
   componentDidMount() {}
 
@@ -144,15 +158,33 @@ class Login extends React.Component {
                 this.handleInputChange('name', e.target.value);
               }}
             />
+            <Label>Password</Label>
+            <InputField
+                type = 'password'
+                placeholder="Enter here.."
+                onChange={e => {
+                  this.handleInputChange('password', e.target.value);
+                }}
+            />
             <ButtonContainer>
               <Button
-                disabled={!this.state.username || !this.state.name}
+                disabled={!this.state.username || !this.state.name || !this.state.password}
                 width="50%"
                 onClick={() => {
                   this.login();
-                }}
+                 }}
               >
                 Login
+              </Button>
+            </ButtonContainer>
+            <ButtonContainer>
+              <Button
+                  width="50%"
+                  onClick={() => {
+                    this.props.history.push(`/register`);
+                  }}
+              >
+                Register
               </Button>
             </ButtonContainer>
           </Form>
@@ -163,7 +195,10 @@ class Login extends React.Component {
 }
 
 /**
- * You can get access to the history object's properties via the withRouter.
- * withRouter will pass updated match, location, and history props to the wrapped component whenever it renders.
+ * You can get access to the history object's properties via
+ * the withRouter.
+ * withRouter will pass updated match, location, and history
+ * props to the wrapped
+ * component whenever it renders.
  */
 export default withRouter(Login);

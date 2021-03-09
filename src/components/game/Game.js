@@ -55,6 +55,8 @@ class Game extends React.Component {
       console.log('status text:', response.statusText);
       console.log('requested data:', response.data);
 
+      //todo: press F12 to see console
+
       // See here to get more data.
       console.log(response);
     } catch (error) {
