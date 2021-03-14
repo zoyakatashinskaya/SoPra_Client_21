@@ -57,18 +57,16 @@ const ButtonContainer = styled.div`
   margin-top: 20px;
 `;
 
-//todo:
-// * change to hooks
-// * delete name as an input field
-// * after successful registration the user is redirected to user profile
-// * creation date is saved in the backend
+const Container = styled(BaseContainer)`
+  color: white;
+  text-align: center;
+`;
 
 class Register extends React.Component {
 
     constructor() {
         super();
         this.state = {
-            name: null,
             username: null,
             password: null
         };
@@ -78,7 +76,6 @@ class Register extends React.Component {
         try {
             const requestBody = JSON.stringify({
                 username: this.state.username,
-                name: this.state.name,
                 password: this.state.password
             });
             const response = await api.post('/users', requestBody);
@@ -88,17 +85,17 @@ class Register extends React.Component {
 
             // Store the token into the local storage.
             localStorage.setItem('token', user.token);
+            localStorage.setItem('id', user.id);
+            console.log('id is ' + localStorage.getItem('id'))
 
             // Login successfully worked --> navigate to the route /game in the GameRouter
             this.props.history.push(`/game`);
         } catch (error) {
-            alert(`Something went wrong during the login: \n${handleError(error)}`);
+            alert(`Something went wrong during the registration: \n${handleError(error)}`);
         }
     }
 
     handleInputChange(key, value) {
-        // Example: if the key is username, this statement is the equivalent to the following one:
-        // this.setState({'username': value});
         this.setState({ [key]: value });
     }
 
@@ -110,6 +107,10 @@ class Register extends React.Component {
             <BaseContainer>
                 <FormContainer>
                     <Form>
+                        <Container>
+                            <h2>Registration</h2>
+                        </Container>
+
                         <Label>Username</Label>
                         <InputField
                             placeholder="Enter here.."
@@ -117,16 +118,9 @@ class Register extends React.Component {
                                 this.handleInputChange('username', e.target.value);
                             }}
                         />
-                        <Label>Name</Label>
-                        <InputField
-                            placeholder="Enter here.."
-                            onChange={e => {
-                                this.handleInputChange('name', e.target.value);
-                            }}
-                        />
                         <Label>Password</Label>
                         <InputField
-                            type = 'password'
+                            type = "password"
                             placeholder="Enter here.."
                             onChange={e => {
                                 this.handleInputChange('password', e.target.value);
@@ -134,13 +128,13 @@ class Register extends React.Component {
                         />
                         <ButtonContainer>
                             <Button
-                                disabled={!this.state.username || !this.state.name || !this.state.password}
+                                disabled={!this.state.username || !this.state.password}
                                 width="50%"
                                 onClick={() => {
                                     this.register();
                                 }}
                             >
-                                Login
+                                Register
                             </Button>
                         </ButtonContainer>
                     </Form>
@@ -149,75 +143,5 @@ class Register extends React.Component {
         );
     }
 }
-
-/*
-const Register = () => {
-    const [name, setName] = useState('') //todo:delete
-    const [username, setUsername] = useState('')
-    const [password, setPassword] = useState('')
-
-    const register = async () => {
-        try{
-            const requestBody = JSON.stringify({
-                name: name, //todo:delete
-                username: username,
-                password: password
-            });
-            const response = await api.post('/users', requestBody);
-            // Get the returned user and update a new object.
-            const user = new User(response.data);
-
-            // Store the token into the local storage.
-            localStorage.setItem('token', user.token);
-
-            // Login successfully worked --> navigate to the route /game in the GameRouter
-            this.props.history.push(`/game`);
-        } catch (error) {
-            alert(`Something went wrong during the login: \n${handleError(error)}`);
-        }
-    }
-//todo:delete name
-    return(
-        <BaseContainer>
-            <FormContainer>
-                <Form>
-
-                    <Label>Name</Label>
-                    <InputField
-                        placeholder="Enter here.."
-                        onChange={(e) => setName(e.target.value)}
-                    />
-
-                    <Label>Username</Label>
-                    <InputField
-                        placeholder="Enter here.."
-                        onChange={(e) => setUsername(e.target.value)}
-                    />
-
-                    <Label>Password</Label>
-                    <InputField
-                        type = 'password'
-                        placeholder="Enter here.."
-                        onChange={(e) => setPassword(e.target.value)}
-                    />
-
-                    <ButtonContainer>
-                        <Button
-                            disabled={!username || !password}
-                            width="50%"
-                            onClick={() =>{
-                                register();
-                            }}
-                        >
-                            Register
-                        </Button>
-                    </ButtonContainer>
-                </Form>
-            </FormContainer>
-        </BaseContainer>
-    )
-}
-
- */
 
 export default withRouter(Register);

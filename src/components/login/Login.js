@@ -6,8 +6,6 @@ import User from '../shared/models/User';
 import { withRouter } from 'react-router-dom';
 import { Button } from '../../views/design/Button';
 
-//todo: User component
-
 const FormContainer = styled.div`
   margin-top: 2em;
   display: flex;
@@ -70,8 +68,6 @@ const ButtonContainer = styled.div`
  * @Class
  */
 
-// todo:
-// * change the login functionality
 class Login extends React.Component {
   /**
    * If you don’t initialize the state and you don’t bind methods,
@@ -84,7 +80,6 @@ class Login extends React.Component {
   constructor() {
     super();
     this.state = {
-      name: null,
       username: null,
       password: null
     };
@@ -98,16 +93,16 @@ class Login extends React.Component {
     try {
       const requestBody = JSON.stringify({
         username: this.state.username,
-        name: this.state.name,
         password: this.state.password
       });
-      const response = await api.post('/users', requestBody);
+      const response = await api.put('/users', requestBody);
 
       // Get the returned user and update a new object.
       const user = new User(response.data);
 
       // Store the token into the local storage.
       localStorage.setItem('token', user.token);
+      localStorage.setItem('id', user.id);
 
       // Login successfully worked --> navigate to the route /game in the GameRouter
       this.props.history.push(`/game`);
@@ -151,13 +146,6 @@ class Login extends React.Component {
                 this.handleInputChange('username', e.target.value);
               }}
             />
-            <Label>Name</Label>
-            <InputField
-              placeholder="Enter here.."
-              onChange={e => {
-                this.handleInputChange('name', e.target.value);
-              }}
-            />
             <Label>Password</Label>
             <InputField
                 type = 'password'
@@ -168,7 +156,7 @@ class Login extends React.Component {
             />
             <ButtonContainer>
               <Button
-                disabled={!this.state.username || !this.state.name || !this.state.password}
+                disabled={!this.state.username || !this.state.password}
                 width="50%"
                 onClick={() => {
                   this.login();

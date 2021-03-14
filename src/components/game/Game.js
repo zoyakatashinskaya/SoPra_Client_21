@@ -32,9 +32,25 @@ class Game extends React.Component {
     };
   }
 
-  logout() {
-    localStorage.removeItem('token');
-    this.props.history.push('/login');
+  async logout() {
+    try{
+      console.log("Logging out")
+      const requestBody = JSON.stringify({
+        id: localStorage.getItem('id'),
+        token: localStorage.getItem('token')
+      });
+      console.log("Request body: " + requestBody)
+
+      await api.post('/users/'+localStorage.getItem('id'), requestBody);
+
+      localStorage.removeItem('token');
+      localStorage.removeItem('id');
+      console.log("Local storage info update: " + localStorage.getItem('id'))
+      this.props.history.push('/login');
+
+    } catch (error){
+      alert(`Something went wrong during the logout: \n${handleError(error)}`);
+    }
   }
 
   async componentDidMount() {
@@ -55,8 +71,6 @@ class Game extends React.Component {
       console.log('status text:', response.statusText);
       console.log('requested data:', response.data);
 
-      //todo: press F12 to see console
-
       // See here to get more data.
       console.log(response);
     } catch (error) {
@@ -67,7 +81,8 @@ class Game extends React.Component {
   render() {
     return (
       <Container>
-        <h2>Happy Coding! </h2>
+        <h2>Happy Coding!</h2>
+        <p>Your user ID is {localStorage.getItem('id')}</p>
         <p>Get all users from secure end point:</p>
         {!this.state.users ? (
           <Spinner />
@@ -76,7 +91,10 @@ class Game extends React.Component {
             <Users>
               {this.state.users.map(user => {
                 return (
-                  <PlayerContainer key={user.id}>
+                  <PlayerContainer key={user.id}
+                                   onClick={() => {
+                                     this.props.history.push('dashboard/users/' + user.id);}
+                                   }>
                     <Player user={user} />
                   </PlayerContainer>
                 );

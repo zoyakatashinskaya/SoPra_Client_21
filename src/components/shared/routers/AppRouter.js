@@ -46,14 +46,10 @@ class AppRouter extends React.Component {
                 path="/register"
                 exact
                 render={() => (
-                    <Register />
+                    <LoginGuard>
+                        <Register />
+                    </LoginGuard>
                     )}
-            />
-            <Route
-                path="/users"
-                exact
-                render={() => (
-                    <UserProfile />)}
             />
             <Route path="/" exact render={() => <Redirect to={"/game"} />} />
           </div>
