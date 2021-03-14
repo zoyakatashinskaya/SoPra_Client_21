@@ -18,8 +18,3 @@ class App extends Component {
 }
 
 export default App;
-
-// npm run dev
-
-// http://localhost:3000/game/dashboard
-// http://localhost:3000/register
